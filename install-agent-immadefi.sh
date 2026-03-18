@@ -1,13 +1,23 @@
 #!/bin/bash
 
 # Verified Agent Identity Installer for IMMADEFI
-# Customized installation script
+# Customized installation script with user input
 
 set -e
 
 echo "=========================================="
 echo "Installing Verified Agent for IMMADEFI"
 echo "=========================================="
+echo ""
+
+# Ask user for agent details
+read -p "Enter your Agent Name: " AGENT_NAME
+read -p "Enter your Agent Description: " AGENT_DESCRIPTION
+
+echo ""
+echo "Agent Name: $AGENT_NAME"
+echo "Agent Description: $AGENT_DESCRIPTION"
+echo ""
 
 # Step 1: Install Node.js and Git (if not already present)
 if ! command -v node &> /dev/null; then
@@ -39,13 +49,14 @@ echo "Installing missing modules..."
 npm install shell-quote @iden3/js-iden3-auth ethers@6 uuid
 
 # Step 5: Create Agent Ethereum Identity
-echo "Creating Agent Ethereum Identity for IMMADEFI..."
+echo "Creating Agent Ethereum Identity..."
 node scripts/createNewEthereumIdentity.js
 
 # Step 6: Link Human Identity with Agent
-echo "Linking Human Identity with IMMADEFI Agent..."
-node scripts/manualLinkHumanToAgent.js --challenge '{"name":"IMMADEFI","description":"AI agent"}'
+echo "Linking Human Identity with Agent..."
+node scripts/manualLinkHumanToAgent.js --challenge "{\"name\":\"$AGENT_NAME\",\"description\":\"$AGENT_DESCRIPTION\"}"
 
 echo "=========================================="
-echo "Setup Complete for IMMADEFI!"
+echo "Setup Complete for $AGENT_NAME!"
 echo "=========================================="
+echo "Your agent is now linked to Billions Network!"
